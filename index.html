@@ -88,6 +88,14 @@
         }
       }
       
+      const drawLives = () => {
+        demoCanvas.beginPath();
+        demoCanvas.fillStyle = "pink";
+        demoCanvas.font = "30px Times New Roman";
+        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
+        demoCanvas.closePath();
+      }
+      
       //clears the canvas
       //updates enemy and player characters
       const updateCanvas = () => {
@@ -126,11 +134,7 @@
           return;
         }  
 
-        demoCanvas.beginPath();
-        demoCanvas.fillStyle = "pink";
-        demoCanvas.font = "30px Times New Roman";
-        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
-        demoCanvas.closePath();
+        drawLives();
         
         window.requestAnimationFrame(draw);
       }
