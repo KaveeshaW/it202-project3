@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>activity_6.3</title>
+<title>project3</title>
 </head>
 <body>
     <canvas id="canvas-demo" width="400" height="400">
@@ -49,93 +49,87 @@
       }
 
       const end = () => {
-        demoCanvas.beginPath();
+        demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
+        //demoCanvas.beginPath();        
         demoCanvas.fillStyle = "green";
         demoCanvas.font = "20px Times New Roman";
         demoCanvas.fillText("Game over! Thanks for playing", 50, 200, 400);
+        //demoCanvas.closePath();
+      }
+      
+      const drawObject = (object) => {
+        demoCanvas.beginPath();
+        demoCanvas.arc(object["x"], object["y"], object["radius"], 0, Math.PI*2);
+        demoCanvas.fillStyle = object.color;
+        demoCanvas.fill();
         demoCanvas.closePath();
+      }
+      
+      const reposition = (object) => {
+        if(object["x"] >= notContextCanvas.width  + object["radius"]) {
+          object["x"] = -object["radius"];
+        }
       }
 
       //score mod 100, game level property
       //level and speed, based on time, score
       const draw = () => {
         
-        demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
+         demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
 
-        // let dogImg = new Image();
-        // dogImg.src = ""
-
-        //image object that you want to draw
-        //pasting it at a certain x and y coordinate
-        // ctx.drawImage(dogImg, 100, 100);
-
-        //player["x"] += 1;
         enemy["x"] += enemy.speed;
         benefit["x"] += benefit.speed;
         
-        // if(player["x"] >= notContextCanvas.width  + player["radius"]) {
-        //   player["x"] = -player["radius"];
-        // }
-
-        if(enemy["x"] >= notContextCanvas.width  + enemy["radius"]) {
-          enemy["x"] = -enemy["radius"];
-        }
+        reposition(enemy);
+        reposition(benefit);
         
-        if(benefit["x"] >= notContextCanvas.width  + benefit["radius"]) {
-          benefit["x"] = -benefit["radius"];
-        }
+//         demoCanvas.beginPath();
+//         let dogImg = new Image();
+//         dogImg.src = "dog-451643.jpg";
 
-        demoCanvas.beginPath();
-        demoCanvas.arc(player["x"], player["y"], player["radius"], 0, Math.PI*2);
-        demoCanvas.fillStyle = player.color;
-        demoCanvas.fill();
-        demoCanvas.closePath();
+//         //image object that you want to draw
+//         //pasting it at a certain x and y coordinate
+//         demoCanvas.drawImage(dogImg, 100, 100);
+//         demoCanvas.endPath();
+            
+           drawObject(player);
+           drawObject(enemy);
+           drawObject(benefit);
 
-        demoCanvas.beginPath();
-        demoCanvas.arc(enemy["x"], enemy["y"], enemy["radius"], 0, Math.PI*2);
-        demoCanvas.fillStyle = enemy.color;
-        demoCanvas.fill();
-        demoCanvas.closePath();
 
-        demoCanvas.beginPath();
-        demoCanvas.arc(benefit["x"], benefit["y"], benefit["radius"], 0, Math.PI*2);
-        demoCanvas.fillStyle = benefit.color;
-        demoCanvas.fill();
-        demoCanvas.closePath();
+//         var dx = player.x - enemy.x;
+//         var dy = player.y - enemy.y;
+//         var distance = Math.sqrt(dx * dx + dy * dy);
 
-        var dx = player.x - enemy.x;
-        var dy = player.y - enemy.y;
-        var distance = Math.sqrt(dx * dx + dy * dy);
+//         if (distance < player.radius + enemy.radius) {
+//             //enemy.color = "green";
+//             player.lives -= 1;
+//             player.x = 100;
+//             player.y = 300;
+//             enemy.y = Math.floor(Math.random() * notContextCanvas.height);
+//         }
 
-        if (distance < player.radius + enemy.radius) {
-            //enemy.color = "green";
-            player.lives -= 1;
-            player.x = 100;
-            player.y = 300;
-            enemy.y = Math.floor(Math.random() * notContextCanvas.height);
-        }
+//         var dx = player.x - benefit.x;
+//         var dy = player.y - benefit.y;
+//         var distance = Math.sqrt(dx * dx + dy * dy);
 
-        var dx = player.x - benefit.x;
-        var dy = player.y - benefit.y;
-        var distance = Math.sqrt(dx * dx + dy * dy);
+//         if (distance < player.radius + benefit.radius) {
+//             //enemy.color = "green";
+//             player.lives += 1;
+//             player.x = 100;
+//             player.y = 300;
+//             benefit.y = Math.floor(Math.random() * notContextCanvas.height);
+//         }
 
-        if (distance < player.radius + benefit.radius) {
-            //enemy.color = "green";
-            player.lives += 1;
-            player.x = 100;
-            player.y = 300;
-            benefit.y = Math.floor(Math.random() * notContextCanvas.height);
-        }
+//         if(player.lives === 0) {
+//           end();
+//         }  
 
-        if(player.lives === 0) {
-          end();
-        }  
-
-        demoCanvas.beginPath();
-        demoCanvas.fillStyle = "pink";
-        demoCanvas.font = "30px Times New Roman";
-        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
-        demoCanvas.closePath();
+//         demoCanvas.beginPath();
+//         demoCanvas.fillStyle = "pink";
+//         demoCanvas.font = "30px Times New Roman";
+//         demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
+//         demoCanvas.closePath();
         
         window.requestAnimationFrame(draw);
       }
