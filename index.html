@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>activity_6.3</title>
+</head>
+<body>
+    <canvas id="canvas-demo" width="400" height="400">
+         This will be displayed if your browser doesn't
+         support the canvas element. The closing tag is
+         necessary.
+    </canvas>
+    <script>
+      const demoCanvas = document.getElementById('canvas-demo').getContext('2d');
+      
+      const notContextCanvas = document.getElementById('canvas-demo');
+      
+      let player = {x:100, y:300, radius: 50, color: "blue", lives: 3};
+      let enemy = {x:100, y: 100, radius: 25, color: "red", speed: 4};
+      let benefit = {x: 100, y: 200, radius: 30, color: "green", speed: 2};
+      //water marks, 
+
+
+      //event handlers change the values
+      document.addEventListener("keydown", (e) => {
+        if(e.key == " ") {
+          draw();
+        }
+      });
+      
+
+      document.addEventListener("keydown", (e) => {
+        if(e.key == "ArrowUp") {
+          player["y"] -= 30;
+        }
+        if(e.key == "ArrowDown") {
+          player["y"] += 30;
+        }
+      });
+      
+      const start = () => {
+        demoCanvas.beginPath();
+        demoCanvas.fillStyle = "green";
+        demoCanvas.font = "20px Times New Roman";
+        demoCanvas.fillText("Welcome to Tom and Jerry Simulator!", 50, 200, 400);
+        demoCanvas.fillText("Press the space bar to play!", 90, 210, 400);
+        demoCanvas.closePath();
+      }
+
+      const end = () => {
+        demoCanvas.beginPath();
+        demoCanvas.fillStyle = "green";
+        demoCanvas.font = "20px Times New Roman";
+        demoCanvas.fillText("Game over! Thanks for playing", 50, 200, 400);
+        demoCanvas.closePath();
+      }
+
+      //score mod 100, game level property
+      //level and speed, based on time, score
+      const draw = () => {
+        
+        demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
+
+        // let dogImg = new Image();
+        // dogImg.src = ""
+
+        //image object that you want to draw
+        //pasting it at a certain x and y coordinate
+        // ctx.drawImage(dogImg, 100, 100);
+
+        //player["x"] += 1;
+        enemy["x"] += enemy.speed;
+        benefit["x"] += benefit.speed;
+        
+        // if(player["x"] >= notContextCanvas.width  + player["radius"]) {
+        //   player["x"] = -player["radius"];
+        // }
+
+        if(enemy["x"] >= notContextCanvas.width  + enemy["radius"]) {
+          enemy["x"] = -enemy["radius"];
+        }
+        
+        if(benefit["x"] >= notContextCanvas.width  + benefit["radius"]) {
+          benefit["x"] = -benefit["radius"];
+        }
+
+        demoCanvas.beginPath();
+        demoCanvas.arc(player["x"], player["y"], player["radius"], 0, Math.PI*2);
+        demoCanvas.fillStyle = player.color;
+        demoCanvas.fill();
+        demoCanvas.closePath();
+
+        demoCanvas.beginPath();
+        demoCanvas.arc(enemy["x"], enemy["y"], enemy["radius"], 0, Math.PI*2);
+        demoCanvas.fillStyle = enemy.color;
+        demoCanvas.fill();
+        demoCanvas.closePath();
+
+        demoCanvas.beginPath();
+        demoCanvas.arc(benefit["x"], benefit["y"], benefit["radius"], 0, Math.PI*2);
+        demoCanvas.fillStyle = benefit.color;
+        demoCanvas.fill();
+        demoCanvas.closePath();
+
+        var dx = player.x - enemy.x;
+        var dy = player.y - enemy.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < player.radius + enemy.radius) {
+            //enemy.color = "green";
+            player.lives -= 1;
+            player.x = 100;
+            player.y = 300;
+            enemy.y = Math.floor(Math.random() * notContextCanvas.height);
+        }
+
+        var dx = player.x - benefit.x;
+        var dy = player.y - benefit.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < player.radius + benefit.radius) {
+            //enemy.color = "green";
+            player.lives += 1;
+            player.x = 100;
+            player.y = 300;
+            benefit.y = Math.floor(Math.random() * notContextCanvas.height);
+        }
+
+        if(player.lives === 0) {
+          end();
+        }  
+
+        demoCanvas.beginPath();
+        demoCanvas.fillStyle = "pink";
+        demoCanvas.font = "30px Times New Roman";
+        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
+        demoCanvas.closePath();
+        
+        window.requestAnimationFrame(draw);
+      }
+      //use functions here
+      start();
+      
+    </script>
+</body>
+</html>
