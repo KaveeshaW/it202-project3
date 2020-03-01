@@ -17,8 +17,8 @@
       const notContextCanvas = document.getElementById('canvas-demo');
       
       let player = {x:100, y:300, radius: 50, color: "blue", lives: 3};
-      let enemy = {x:100, y: 100, radius: 25, color: "red", speed: 4};
-      let benefit = {x: 100, y: 200, radius: 30, color: "green", speed: 2};
+      let enemy = {x:100, y: 100, radius: 25, color: "red", speed: 4, name: "enemy"};
+      let benefit = {x: 100, y: 200, radius: 30, color: "green", speed: 2, name: "benefit"};
       //water marks, 
 
 
@@ -70,19 +70,41 @@
           object["x"] = -object["radius"];
         }
       }
+      
+      //other is either the benefit or the harm character
+      const hitDetection = (player, other) => {
+        var dx = player.x - other.x;
+        var dy = player.y - other.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < player.radius + other.radius) {
+            if(other.name === "enemy") {
+              player.lives -= 1;
+            }
+            if(other.name === "benefit") {
+              player.lives += 1;  
+            }
+            other.y = Math.floor(Math.random() * notContextCanvas.height);
+        }
+      }
+      
+      //clears the canvas
+      //updates enemy and player characters
+      const updateCanvas = () => {
+        demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
+
+        enemy["x"] += enemy.speed;
+        benefit["x"] += benefit.speed;
+      }
 
       //score mod 100, game level property
       //level and speed, based on time, score
       const draw = () => {
-        
-         demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
+        updateCanvas();
 
-        enemy["x"] += enemy.speed;
-        benefit["x"] += benefit.speed;
-        
         reposition(enemy);
         reposition(benefit);
-        
+
 //         demoCanvas.beginPath();
 //         let dogImg = new Image();
 //         dogImg.src = "dog-451643.jpg";
@@ -91,45 +113,24 @@
 //         //pasting it at a certain x and y coordinate
 //         demoCanvas.drawImage(dogImg, 100, 100);
 //         demoCanvas.endPath();
-            
-           drawObject(player);
-           drawObject(enemy);
-           drawObject(benefit);
 
+        drawObject(player);
+        drawObject(enemy);
+        drawObject(benefit);
 
-//         var dx = player.x - enemy.x;
-//         var dy = player.y - enemy.y;
-//         var distance = Math.sqrt(dx * dx + dy * dy);
+        hitDetection(player, enemy);
+        hitDetection(player, benefit);
 
-//         if (distance < player.radius + enemy.radius) {
-//             //enemy.color = "green";
-//             player.lives -= 1;
-//             player.x = 100;
-//             player.y = 300;
-//             enemy.y = Math.floor(Math.random() * notContextCanvas.height);
-//         }
+        if(player.lives === 0) {
+          end();
+          return;
+        }  
 
-//         var dx = player.x - benefit.x;
-//         var dy = player.y - benefit.y;
-//         var distance = Math.sqrt(dx * dx + dy * dy);
-
-//         if (distance < player.radius + benefit.radius) {
-//             //enemy.color = "green";
-//             player.lives += 1;
-//             player.x = 100;
-//             player.y = 300;
-//             benefit.y = Math.floor(Math.random() * notContextCanvas.height);
-//         }
-
-//         if(player.lives === 0) {
-//           end();
-//         }  
-
-//         demoCanvas.beginPath();
-//         demoCanvas.fillStyle = "pink";
-//         demoCanvas.font = "30px Times New Roman";
-//         demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
-//         demoCanvas.closePath();
+        demoCanvas.beginPath();
+        demoCanvas.fillStyle = "pink";
+        demoCanvas.font = "30px Times New Roman";
+        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
+        demoCanvas.closePath();
         
         window.requestAnimationFrame(draw);
       }
