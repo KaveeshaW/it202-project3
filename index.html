@@ -31,7 +31,7 @@
         }
       });
       
-
+      //used keydown because I wanted to track user press and hold, not just press, which would be key up
       document.addEventListener("keydown", (e) => {
         if(e.key == "ArrowUp") {
           player["y"] -= 30;
