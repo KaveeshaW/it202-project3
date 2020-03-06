@@ -16,16 +16,18 @@
       const ctx = canvas.getContext('2d');
       
       let level = 1;
+      let count = 0;
       let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0};
       let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 16, name: "enemy"};
       let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 13, name: "benefit"};
-      //water marks, 
-
-
+ 
       //event handlers change the values
+      //added a count variable so you can only press space once, before you could press space a bunch of times leading
+      //to weird results
       document.addEventListener("keydown", (e) => {
-        if(e.key == " ") {
+        if(e.key === " " && count === 0) {
           draw();
+          count++;
         }
       });
       
