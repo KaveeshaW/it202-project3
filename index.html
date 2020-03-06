@@ -12,9 +12,8 @@
          necessary.
     </canvas>
     <script>
-      const demoCanvas = document.getElementById('canvas-demo').getContext('2d');
-      
-      const notContextCanvas = document.getElementById('canvas-demo');
+      const canvas = document.getElementById('canvas-demo');
+      const ctx = canvas.getContext('2d');
       
       let level = 1;
       let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0};
@@ -41,41 +40,47 @@
       });
       
       const start = () => {                
-        demoCanvas.beginPath();  
+        ctx.beginPath();  
         let spike = new Image();
-        demoCanvas.fillStyle = "black";
-        demoCanvas.font = "40px Times New Roman";
-        demoCanvas.fillText("Welcome to the Tom and Jerry Simulator!", 825, 100);
-        demoCanvas.font = "20px Times New Roman";
-        demoCanvas.fillText("Press the space bar to play!", 825, 125);
-        demoCanvas.fillText("Move the blue player up and down!", 825, 150);
-        demoCanvas.fillText("Try to hit the green circle to gain points!", 825, 175);
-        demoCanvas.fillText("Avoid the red circle, it will lower your life counter!", 825, 200);
-        demoCanvas.fillText("If you get to 0 lives, it is game over!", 825, 225);
-        demoCanvas.fillText("There are 4 levels!", 825, 250);
-        demoCanvas.fillText("To increase a level, get two points!", 825, 275);
-        demoCanvas.closePath();
+        ctx.fillStyle = "black";
+        ctx.font = "40px Times New Roman";
+        ctx.fillText("Welcome to the Tom and Jerry Simulator!", 825, 100);
+        ctx.font = "20px Times New Roman";
+        ctx.fillText("Press the space bar to play!", 825, 125);
+        ctx.fillText("Move the blue player up and down!", 825, 150);
+        ctx.fillText("Try to hit the green circle to gain points!", 825, 175);
+        ctx.fillText("Avoid the red circle, it will lower your life counter!", 825, 200);
+        ctx.fillText("If you get to 0 lives, it is game over!", 825, 225);
+        ctx.fillText("There are 4 levels!", 825, 250);
+        ctx.fillText("To increase a level, get two points!", 825, 275);
+        ctx.closePath();
       }
 
       const end = () => {
-        demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
-        demoCanvas.beginPath();        
-        demoCanvas.fillStyle = "black";
-        demoCanvas.font = "40px Times New Roman";
-        demoCanvas.fillText("Game over! Thanks for playing", 700, 150);
-        demoCanvas.closePath();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();        
+        ctx.fillStyle = "black";
+        ctx.font = "40px Times New Roman";
+        ctx.fillText("Game over! Thanks for playing", 700, 150);
+        ctx.closePath();
       }
       
       const drawObject = (object) => {
-        demoCanvas.beginPath();
-        demoCanvas.arc(object["x"], object["y"], object["radius"], 0, Math.PI*2);
-        demoCanvas.fillStyle = object.color;
-        demoCanvas.fill();
-        demoCanvas.closePath();
+//         ctx.beginPath();
+//         let spike = new Image();
+//         spike.src = "spike.jpg";
+//         ctx.drawImage(spike, 50, 50, 50, 50);
+//         ctx.closePath();
+        
+        ctx.beginPath();
+        ctx.arc(object["x"], object["y"], object["radius"], 0, Math.PI*2);
+        ctx.fillStyle = object.color;
+        ctx.fill();
+        ctx.closePath();
       }
       
       const reposition = (object) => {
-        if(object["x"] >= notContextCanvas.width  + object["radius"]) {
+        if(object["x"] >= canvas.width  + object["radius"]) {
           object["x"] = -object["radius"];
         }
       }
@@ -93,26 +98,26 @@
             if(other.name === "benefit") {
               player.score += 1;  
             }
-            other.y = Math.floor(Math.random() * notContextCanvas.height);
+            other.y = Math.floor(Math.random() * canvas.height);
             //want the player to have some reaction
-            other.x = notContextCanvas.width - 600;
+            other.x = canvas.width - 600;
         }
       }
       
       const drawInfo = () => {
-        demoCanvas.beginPath();
-        demoCanvas.fillStyle = "black";
-        demoCanvas.font = "30px Times New Roman";
-        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 1200);
-        demoCanvas.fillText("Player Score: " + player.score, 600, 40, 1200);
-        demoCanvas.fillText("Level: " + level, 1200, 40, 1200);
-        demoCanvas.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.font = "30px Times New Roman";
+        ctx.fillText("Player Lives: " + player.lives, 30, 40, 1200);
+        ctx.fillText("Player Score: " + player.score, 600, 40, 1200);
+        ctx.fillText("Level: " + level, 1200, 40, 1200);
+        ctx.closePath();
       }
       
       //clears the canvas
       //updates enemy and player characters
       const updateCanvas = () => {
-        demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         enemy["x"] += enemy.speed;
         benefit["x"] += benefit.speed;
