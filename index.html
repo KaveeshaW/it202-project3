@@ -32,7 +32,7 @@
       let level = 1;
       let howManyTimeSpaceUsed = 0;
       let baseThreshold = 2;
-      let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0, name: "player", width: 80, height: 80};
+      let player = {x:canvas.width - 200, y:canvas.height - 200, radius: 29, color: "blue", lives: 3, score: 0, name: "player", width: 80, height: 80};
       let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 7, name: "enemy", width: 110, height: 110};
       let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 5, name: "benefit", width: 100, height: 100};
  
@@ -102,21 +102,6 @@
       
       //other is either the benefit or the harm character
       const hitDetection = (player, other) => {
-//         var dx = player.x - other.x;
-//         var dy = player.y - other.y;
-//         var distance = Math.sqrt(dx * dx + dy * dy);
-        
-//         if (distance < player.radius + other.radius) {
-//             if(other.name === "enemy") {
-//               player.lives -= 1;
-//             }
-//             if(other.name === "benefit") {
-//               player.score += 1;  
-//             }
-//             other.y = Math.floor(Math.random() * canvas.height);
-//             //want the player to have some reaction
-//             other.x = canvas.width - 600;
-//         }
         
         if (player.x < other.x + other.width &&
            player.x + player.width > other.x &&
@@ -131,7 +116,7 @@
           }
           other.y = Math.floor(Math.random() * canvas.height);
           //want the player to have some reaction
-          other.x = canvas.width - 600;
+          other.x = 200;
         }
       }
       
