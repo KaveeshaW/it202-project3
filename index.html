@@ -15,20 +15,34 @@
       const canvas = document.getElementById('canvas-demo');
       const ctx = canvas.getContext('2d');
       
+      //----------------------------
+      //creating different images
+      //the enemy image
+      let spike = new Image();
+      spike.src = "spike.jpg";
+      
+      //the benefit image
+      let tom = new Image();
+      tom.src = "tom.jpg";
+      
+      let black_cat = new Image();
+      black_cat.src = "black_cat.jpg";
+      //----------------------------
+      
       let level = 1;
-      let count = 0;
+      let howManyTimeSpaceUsed = 0;
       let baseThreshold = 2;
-      let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0};
-      let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 16, name: "enemy"};
-      let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 13, name: "benefit"};
+      let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0, name: "player", width: 80, height: 80};
+      let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 7, name: "enemy", width: 110, height: 110};
+      let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 5, name: "benefit", width: 100, height: 100};
  
       //event handlers change the values
-      //added a count variable so you can only press space once, before you could press space a bunch of times leading
+      //added a howManyTimeSpaceUsed variable so you can only press space once, before you could press space a bunch of times leading
       //to weird results
       document.addEventListener("keydown", (e) => {
-        if(e.key === " " && count === 0) {
+        if(e.key === " " && howManyTimeSpaceUsed === 0) {
           draw();
-          count++;
+          howManyTimeSpaceUsed++;
         }
       });
       
@@ -44,7 +58,7 @@
       
       const start = () => {                
         ctx.beginPath();  
-        let spike = new Image();
+        //let spike = new Image();
         ctx.fillStyle = "black";
         ctx.font = "40px Times New Roman";
         ctx.fillText("Welcome to the Tom and Jerry Simulator!", 825, 100);
@@ -69,18 +83,15 @@
       }
       
       const drawObject = (object) => {
-//         ctx.beginPath();
-//         let spike = new Image();
-//         spike.src = "spike.jpg";
-//         //ctx.drawImage(spike, 50, 50, 50, 50);
-//         ctx.rect(object["x"], object["y"], 100, 100);
-//         ctx.closePath();
-        
-        ctx.beginPath();
-        ctx.arc(object["x"], object["y"], object["radius"], 0, Math.PI*2);
-        ctx.fillStyle = object.color;
-        ctx.fill();
-        ctx.closePath();
+        if(object.name === "enemy") {
+          ctx.drawImage(spike, object["x"], object["y"], object.width, object.height);
+        }
+        else if(object.name == "benefit") {
+          ctx.drawImage(black_cat, object["x"], object["y"], object.width, object.height);
+        }
+        else {
+          ctx.drawImage(tom, object["x"], object["y"], object.width, object.height);
+        }
       }
       
       const reposition = (object) => {
@@ -91,20 +102,36 @@
       
       //other is either the benefit or the harm character
       const hitDetection = (player, other) => {
-        var dx = player.x - other.x;
-        var dy = player.y - other.y;
-        var distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < player.radius + other.radius) {
-            if(other.name === "enemy") {
-              player.lives -= 1;
-            }
-            if(other.name === "benefit") {
-              player.score += 1;  
-            }
-            other.y = Math.floor(Math.random() * canvas.height);
-            //want the player to have some reaction
-            other.x = canvas.width - 600;
+//         var dx = player.x - other.x;
+//         var dy = player.y - other.y;
+//         var distance = Math.sqrt(dx * dx + dy * dy);
+        
+//         if (distance < player.radius + other.radius) {
+//             if(other.name === "enemy") {
+//               player.lives -= 1;
+//             }
+//             if(other.name === "benefit") {
+//               player.score += 1;  
+//             }
+//             other.y = Math.floor(Math.random() * canvas.height);
+//             //want the player to have some reaction
+//             other.x = canvas.width - 600;
+//         }
+        
+        if (player.x < other.x + other.width &&
+           player.x + player.width > other.x &&
+           player.y < other.y + other.height &&
+           player.y + player.height > other.y) 
+        {
+          if(other.name === "enemy") {
+            player.lives -= 1;
+          }
+          if(other.name === "benefit") {
+            player.score += 1;  
+          }
+          other.y = Math.floor(Math.random() * canvas.height);
+          //want the player to have some reaction
+          other.x = canvas.width - 600;
         }
       }
       
@@ -126,6 +153,14 @@
         enemy["x"] += enemy.speed;
         benefit["x"] += benefit.speed;
       }
+      
+      const changeLevel = () => {
+        if(player.score >= baseThreshold && player.score % 2 == 0) {
+          enemy.speed += 2;
+          level++;
+          baseThreshold += 2;
+        }   
+      }
 
       //score mod 100, game level property
       //level and speed, based on time, score
@@ -141,31 +176,17 @@
 
         hitDetection(player, enemy);
         hitDetection(player, benefit);
-        
-//         if(player.score % 2 === 0) {
-//          if(beenIn === false) {
-//            enemy.speed++;
-//            level++;
-//            beenIn = true;
-//           }
-//         }
                   
-        if(player.score >= baseThreshold && player.score % 2 == 0) {
-          enemy.speed += 2;
-          level++;
-          baseThreshold += 2;
-          console.log(baseThreshold);
-        }     
-        
-        
-        if(player.lives === 0) {
-          end();
-          return;
-        }  
+        changeLevel();
 
         drawInfo();
         
-        window.requestAnimationFrame(draw);
+        if(player.lives > 0) {
+          window.requestAnimationFrame(draw);
+        }
+        else {
+          end();
+        }
       }
       //use functions here
       start();
