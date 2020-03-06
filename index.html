@@ -17,6 +17,7 @@
       
       let level = 1;
       let count = 0;
+      let baseThreshold = 2;
       let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0};
       let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 16, name: "enemy"};
       let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 13, name: "benefit"};
@@ -71,7 +72,8 @@
 //         ctx.beginPath();
 //         let spike = new Image();
 //         spike.src = "spike.jpg";
-//         ctx.drawImage(spike, 50, 50, 50, 50);
+//         //ctx.drawImage(spike, 50, 50, 50, 50);
+//         ctx.rect(object["x"], object["y"], 100, 100);
 //         ctx.closePath();
         
         ctx.beginPath();
@@ -140,30 +142,21 @@
         hitDetection(player, enemy);
         hitDetection(player, benefit);
         
-        //let score = player.score;
-        //if(player.score % 2 === 0) {
-        //  if(beenIn === false) {
-          //  speed++;
-          //  level++;
-          //  beenIn = true;
-          //}
-        //}
-        //
+//         if(player.score % 2 === 0) {
+//          if(beenIn === false) {
+//            enemy.speed++;
+//            level++;
+//            beenIn = true;
+//           }
+//         }
+                  
+        if(player.score >= baseThreshold && player.score % 2 == 0) {
+          enemy.speed += 2;
+          level++;
+          baseThreshold += 2;
+          console.log(baseThreshold);
+        }     
         
-        
-        
-        if(player.score === 2) {
-          enemy.speed = 19;
-          level = 2;
-        }
-        else if(player.score === 4) {
-          enemy.speed = 22;
-          level = 3;
-        }
-        else if(player.score === 6) {
-          enemy.speed = 26;
-          level = 4;
-        }
         
         if(player.lives === 0) {
           end();
