@@ -6,7 +6,7 @@
 <title>project3</title>
 </head>
 <body>
-    <canvas id="canvas-demo" width="400" height="400">
+    <canvas id="canvas-demo" width="1500%" height="600%" style = "background: url(tomJerry.jpg); background-size: 100% 100%;">
          This will be displayed if your browser doesn't
          support the canvas element. The closing tag is
          necessary.
@@ -16,9 +16,10 @@
       
       const notContextCanvas = document.getElementById('canvas-demo');
       
-      let player = {x:100, y:300, radius: 50, color: "blue", lives: 3};
-      let enemy = {x:100, y: 100, radius: 25, color: "red", speed: 4, name: "enemy"};
-      let benefit = {x: 100, y: 200, radius: 30, color: "green", speed: 2, name: "benefit"};
+      let level = 1;
+      let player = {x:100, y:300, radius: 29, color: "blue", lives: 3, score: 0};
+      let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 16, name: "enemy"};
+      let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 13, name: "benefit"};
       //water marks, 
 
 
@@ -39,22 +40,29 @@
         }
       });
       
-      const start = () => {
+      const start = () => {                
         demoCanvas.beginPath();
-        demoCanvas.fillStyle = "green";
+        demoCanvas.fillStyle = "black";
+        demoCanvas.font = "40px Times New Roman";
+        demoCanvas.fillText("Welcome to the Tom and Jerry Simulator!", 825, 100);
         demoCanvas.font = "20px Times New Roman";
-        demoCanvas.fillText("Welcome to Tom and Jerry Simulator!", 50, 200, 400);
-        demoCanvas.fillText("Press the space bar to play!", 90, 210, 400);
+        demoCanvas.fillText("Press the space bar to play!", 825, 125);
+        demoCanvas.fillText("Move the blue player up and down!", 825, 150);
+        demoCanvas.fillText("Try to hit the green circle to gain points!", 825, 175);
+        demoCanvas.fillText("Avoid the red circle, it will lower your life counter!", 825, 200);
+        demoCanvas.fillText("If you get to 0 lives, it is game over!", 825, 225);
+        demoCanvas.fillText("There are 4 levels!", 825, 250);
+        demoCanvas.fillText("To increase a level, get two points!", 825, 275);
         demoCanvas.closePath();
       }
 
       const end = () => {
         demoCanvas.clearRect(0, 0, notContextCanvas.width, notContextCanvas.height);
-        //demoCanvas.beginPath();        
-        demoCanvas.fillStyle = "green";
-        demoCanvas.font = "20px Times New Roman";
-        demoCanvas.fillText("Game over! Thanks for playing", 50, 200, 400);
-        //demoCanvas.closePath();
+        demoCanvas.beginPath();        
+        demoCanvas.fillStyle = "black";
+        demoCanvas.font = "40px Times New Roman";
+        demoCanvas.fillText("Game over! Thanks for playing", 700, 150);
+        demoCanvas.closePath();
       }
       
       const drawObject = (object) => {
@@ -82,18 +90,20 @@
               player.lives -= 1;
             }
             if(other.name === "benefit") {
-              player.lives += 1;  
+              player.score += 1;  
             }
             other.y = Math.floor(Math.random() * notContextCanvas.height);
-            other.x = notContextCanvas.width - 40;
+            other.x = notContextCanvas.width - 400;
         }
       }
       
-      const drawLives = () => {
+      const drawInfo = () => {
         demoCanvas.beginPath();
-        demoCanvas.fillStyle = "pink";
+        demoCanvas.fillStyle = "black";
         demoCanvas.font = "30px Times New Roman";
-        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 300);
+        demoCanvas.fillText("Player Lives: " + player.lives, 30, 40, 1200);
+        demoCanvas.fillText("Player Score: " + player.score, 600, 40, 1200);
+        demoCanvas.fillText("Level: " + level, 1200, 40, 1200);
         demoCanvas.closePath();
       }
       
@@ -129,13 +139,26 @@
 
         hitDetection(player, enemy);
         hitDetection(player, benefit);
-
+        
+        if(player.score === 2) {
+          enemy.speed = 19;
+          level = 2;
+        }
+        else if(player.score === 4) {
+          enemy.speed = 22;
+          level = 3;
+        }
+        else if(player.score === 6) {
+          enemy.speed = 26;
+          level = 4;
+        }
+        
         if(player.lives === 0) {
           end();
           return;
         }  
 
-        drawLives();
+        drawInfo();
         
         window.requestAnimationFrame(draw);
       }
