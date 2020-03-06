@@ -41,7 +41,8 @@
       });
       
       const start = () => {                
-        demoCanvas.beginPath();
+        demoCanvas.beginPath();  
+        let spike = new Image();
         demoCanvas.fillStyle = "black";
         demoCanvas.font = "40px Times New Roman";
         demoCanvas.fillText("Welcome to the Tom and Jerry Simulator!", 825, 100);
@@ -125,21 +126,24 @@
         reposition(enemy);
         reposition(benefit);
 
-//         demoCanvas.beginPath();
-//         let dogImg = new Image();
-//         dogImg.src = "dog-451643.jpg";
-
-//         //image object that you want to draw
-//         //pasting it at a certain x and y coordinate
-//         demoCanvas.drawImage(dogImg, 100, 100);
-//         demoCanvas.endPath();
-
         drawObject(player);
         drawObject(enemy);
         drawObject(benefit);
 
         hitDetection(player, enemy);
         hitDetection(player, benefit);
+        
+        //let score = player.score;
+        //if(player.score % 2 === 0) {
+        //  if(beenIn === false) {
+          //  speed++;
+          //  level++;
+          //  beenIn = true;
+          //}
+        //}
+        //
+        
+        
         
         if(player.score === 2) {
           enemy.speed = 19;
