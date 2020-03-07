@@ -29,21 +29,18 @@
       black_cat.src = "black_cat.jpg";
       //----------------------------
       
-      let paused = false;
-      let level = 1;
-      let howManyTimeSpaceUsed = 0;
-      let baseThreshold = 2;
-      let player = {x:canvas.width - 200, y:canvas.height - 200, radius: 29, color: "blue", lives: 3, score: 0, name: "player", width: 80, height: 80};
+      let game = {paused: false, level: 1, howManyTimeSpaceUsed: 0, baseThreshold: 2, name: "game"}
+      let player = {x:canvas.width - 200, y:canvas.height - 200, lives: 3, score: 0, name: "player", width: 80, height: 80};
       let enemy = {x:100, y: 100, speed: 7, name: "enemy", width: 110, height: 110};
-      let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 5, name: "benefit", width: 100, height: 100};
+      let benefit = {x: 100, y: 200, speed: 5, name: "benefit", width: 100, height: 100};
  
       //event handlers change the values
       //added a howManyTimeSpaceUsed variable so you can only press space once, before you could press space a bunch of times leading
       //to weird results
       document.addEventListener("keydown", (e) => {
-        if(e.key === " " && howManyTimeSpaceUsed === 0) {
+        if(e.key === " " && game.howManyTimeSpaceUsed === 0) {
           draw();
-          howManyTimeSpaceUsed++;
+          game.howManyTimeSpaceUsed++;
         }
       });
       
@@ -61,12 +58,12 @@
       //
       document.addEventListener("keyup",  (e) => {
         if(e.key== "p") {
-          if(!paused) {
+          if(!game.paused) {
             pauseScreen();
-            paused = true;
+            game.paused = true;
           }
-          else if(paused) {
-            paused = false;
+          else if(game.paused) {
+            game.paused = false;
             window.requestAnimationFrame(draw);
           }
         }
@@ -149,9 +146,9 @@
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.font = "30px Times New Roman";
-        ctx.fillText("Player Lives: " + player.lives, 30, 40, 1200);
-        ctx.fillText("Player Score: " + player.score, 600, 40, 1200);
-        ctx.fillText("Level: " + level, 1200, 40, 1200);
+        ctx.fillText("Player Lives: " + player.lives, 30, 40, 1000);
+        ctx.fillText("Player Score: " + player.score, 400, 40, 1000);
+        ctx.fillText("Level: " + game.level, 800, 40, 1000);
         ctx.closePath();
       }
       
@@ -165,16 +162,17 @@
       }
       
       const changeLevel = () => {
-        if(player.score >= baseThreshold && player.score % 2 == 0) {
+        if(player.score >= game.baseThreshold && player.score % 2 == 0) {
           enemy.speed += 2;
-          level++;
-          baseThreshold += 2;
+          game.level++;
+          game.baseThreshold += 2;
         }   
       }
 
       //score mod 100, game level property
       //level and speed, based on time, score
       const draw = () => {
+        
         updateCanvas();
 
         reposition(enemy);
@@ -191,10 +189,10 @@
 
         drawInfo();
         
-        if(player.lives > 0 && paused === false) {
+        if(player.lives > 0 && game.paused === false) {
           window.requestAnimationFrame(draw);
         }
-        else if(paused === true) {
+        else if(game.paused === true) {
           pauseScreen();
         }
         else {
