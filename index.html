@@ -34,7 +34,7 @@
       let howManyTimeSpaceUsed = 0;
       let baseThreshold = 2;
       let player = {x:canvas.width - 200, y:canvas.height - 200, radius: 29, color: "blue", lives: 3, score: 0, name: "player", width: 80, height: 80};
-      let enemy = {x:100, y: 100, radius: 48, color: "red", speed: 7, name: "enemy", width: 110, height: 110};
+      let enemy = {x:100, y: 100, speed: 7, name: "enemy", width: 110, height: 110};
       let benefit = {x: 100, y: 200, radius: 39, color: "green", speed: 5, name: "benefit", width: 100, height: 100};
  
       //event handlers change the values
@@ -119,8 +119,8 @@
       }
       
       const reposition = (object) => {
-        if(object["x"] >= canvas.width  + object["radius"]) {
-          object["x"] = -object["radius"];
+        if(object["x"] >= canvas.width  + object.width/2) {
+          object["x"] = -object.width/2;
         }
       }
       
@@ -138,7 +138,8 @@
           if(other.name === "benefit") {
             player.score += 1;  
           }
-          other.y = Math.floor(Math.random() * canvas.height);
+          //I want the object on the screen after respawning
+          other.y = Math.floor(Math.random() * canvas.height) - other.height;
           //want the player to have some reaction
           other.x = 200;
         }
