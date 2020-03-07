@@ -29,6 +29,7 @@
       black_cat.src = "black_cat.jpg";
       //----------------------------
       
+      let paused = false;
       let level = 1;
       let howManyTimeSpaceUsed = 0;
       let baseThreshold = 2;
@@ -56,6 +57,21 @@
         }
       });
       
+      //used keyup because I don't want to be listening for users input when pressing down a key
+      //
+      document.addEventListener("keyup",  (e) => {
+        if(e.key== "p") {
+          if(!paused) {
+            pauseScreen();
+            paused = true;
+          }
+          else if(paused) {
+            paused = false;
+            window.requestAnimationFrame(draw);
+          }
+        }
+      });
+      
       const start = () => {                
         ctx.beginPath();  
         //let spike = new Image();
@@ -69,6 +85,15 @@
         ctx.fillText("Avoid Spike (the dog), as he will lower your life counter!", 825, 200);
         ctx.fillText("If you get to 0 lives, it is game over!", 825, 225);
         ctx.fillText("2 points equals another level!", 825, 250);
+        ctx.fillText("To pause the game, press p!", 825, 275);
+        ctx.closePath();
+      }
+      
+      const pauseScreen = () => {                
+        ctx.beginPath();  
+        ctx.fillStyle = "black";
+        ctx.font = "45px Times New Roman";
+        ctx.fillText("The game is paused!", 825, 125);
         ctx.closePath();
       }
 
@@ -165,8 +190,11 @@
 
         drawInfo();
         
-        if(player.lives > 0) {
+        if(player.lives > 0 && paused === false) {
           window.requestAnimationFrame(draw);
+        }
+        else if(paused === true) {
+          pauseScreen();
         }
         else {
           end();
